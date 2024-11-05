@@ -1,0 +1,67 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.register-container {
+    position: relative; /* Set relative positioning to allow absolute children */
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    overflow: hidden;}
+
+.register-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0; /* Ensure there is no left margin */
+    width: 100%;
+    height: 100%;
+    background-image: url('../Images/login_bg.avif'); /* Your image */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.3; /* Background opacity */
+    z-index: -1; /* Behind the registration content */
+}
+
+.register-box {
+    background-color: white;/* Semi-transparent background */
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;}
+
+.input-group {
+    margin-bottom: 15px; /* Space between input fields */
+}
+
+input[type="email"],
+input[type="password"] {
+    width: 100%; /* Full width of the input field */
+    padding: 10px; /* Inner padding */
+    border: 1px solid #ccc; /* Border styling */
+    border-radius: 5px; /* Rounded corners */
+}
+
+.register-button {
+    background-color: #007bff; /* Button color */
+    color: white; /* Text color */
+    padding: 10px; /* Inner padding */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer on hover */
+    width: 100%; /* Full width */
+}
+
+.register-button:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+}

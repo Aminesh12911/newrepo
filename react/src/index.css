@@ -1,0 +1,128 @@
+* {
+  margin: 0;
+  padding: 0;
+  margin-left: 1%;
+  margin-right: 1%;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  color: #333;
+  line-height: 1.6;
+  
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+    max-height: 100vh; /* Prevent scrolling beyond the visible viewport height */
+    overflow-y: auto;  /* Only allow vertical scrolling if necessary */
+  
+  
+}
+
+
+.hero-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 50px;
+  min-height: 80vh; /* Adjust this to increase height */
+  margin-left: 50px;
+  margin-top: 100px;
+}
+
+.hero-text {
+  width: 50%;
+  margin:0;
+  margin-bottom: 150px;
+}
+
+.hero-text h1 {
+ 
+  font-weight: 700;
+  font-size: 3.75rem;
+
+  line-height: 1.2;
+  
+}
+
+.hero-text p {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  margin-top: 40px;
+}
+
+.cta-btn {
+  position: relative;
+  top: 40px; 
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 5px;
+
+}
+
+.available-on {
+  display: flex;
+  align-items: center;
+  margin-top: 30px;
+
+}
+
+.available-on p {
+  margin-right: 10px;
+  line-height: 2;
+  font-size: 14px;
+  margin-top: 40px;
+}
+
+
+
+.app-logo {
+  width: 20px; /* Adjust size as needed */
+  margin-left:2px; /* Space between logos */
+  margin-bottom: 10px;
+  margin-top: 40px;
+}
+.hero-image {
+  width: 50%; /* Keep width at 50% */
+  height: 450px; /* Set a specific height for the image */
+  max-height: none; /* Remove max-height restriction */
+  object-fit: cover; /* Ensure the image covers the area without distortion */
+  margin-top: -200px;
+  
+}
+
+.hero-image img {
+  width: 100%; /* Make the image take the full width of the container */
+  height: 100%; /* Ensure the image takes the full height of the parent div */
+  object-fit: cover; /* Keep the aspect ratio intact */
+}
+.blue-text {
+  color: #007bff;
+}
+
+
+.section {
+  padding: 100px 20px;
+  text-align: center;
+}
+
+.services-container {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.service-box {
+  width: 30%;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+footer {
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 20px 0;
+}

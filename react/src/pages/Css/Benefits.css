@@ -1,0 +1,28 @@
+.benefits-section {
+  padding: 40px;
+  text-align: center;
+  min-height: 100vh;
+}
+
+.benefits-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.benefits-column {
+  width: 45%; /* Adjust the width to fit both columns */
+}
+
+.benefit-item {
+  margin-bottom: 20px;
+}
+
+h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 1rem;
+}
