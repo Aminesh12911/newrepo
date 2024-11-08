@@ -10,6 +10,7 @@ import UserProfile from './pages/userProfile';
 import Order from './pages/order'
 import SupplierProfile from "./pages/supplierProfile";
 import Payment from "./pages/payment";
+import Invoice from "./pages/invoice.jsx"
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path='/supplierProfile'element={<SupplierProfile/>}      />
         <Route path='/order' element={<Order/>}      />
         <Route path='/payment' element={<Payment/>}      />
+        <Route path='/invoice/:orderId' element={<Invoice/>}      />
           </Routes>
     </Router>
   );

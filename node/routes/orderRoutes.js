@@ -7,6 +7,7 @@ const orderController = require('../controllers/orderController');
 router.post('/createOrder', orderController.createOrder); // Create a new order
 router.get('/getOrder', orderController.getOrder); // Create a new order
 router.put('/updateOrder/:orderId', orderController.updateOrder); // Corrected route path
+router.get('/getParticularOrder/:orderId', orderController.getParticularOrder); // Fetch order by orderId
 
 
 

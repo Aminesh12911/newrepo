@@ -1,4 +1,3 @@
-// controllers/authController.js
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Supplier = require('../models/supplier.js'); // Updated import
@@ -42,21 +41,23 @@ const login = async (req, res) => {
     const token = jwt.sign({ id: supplier._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
     res.json({ token });
 };
+
+// Update Supplier Profile
 const updateSupplierProfile = async (req, res) => {
     const { name, cell, home, gender } = req.body;
     const token = req.headers.authorization.split(" ")[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);  // Verifying token
-    const supplierId = decoded.id;  // Retrieve userId from decoded token payload
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const supplierId = decoded.id;
 
     try {
         const updatedSupplier = await Supplier.findByIdAndUpdate(
             supplierId,
-            { name,  cell, home, gender,  role: 'supplier' },  // Update role to 'supplier'
+            { name, cell, home, gender },
             { new: true }
         ).select("-password");
 
         if (!updatedSupplier) {
-            return res.status(404).json({ message: "User not found" });
+            return res.status(404).json({ message: "Supplier not found" });
         }
 
         res.json(updatedSupplier);
@@ -66,27 +67,47 @@ const updateSupplierProfile = async (req, res) => {
     }
 };
 
-const supplierProfile = async(req,res)=>{
+// Get Supplier Profile
+const supplierProfile = async (req, res) => {
     try {
         const token = req.headers.authorization.split(" ")[1];
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        
-        const supplier = await Supplier.findById(decoded.id).select("-password"); // Exclude password
-        if (!supplier) return res.status(404).json({ message: " not found" });
-    
+
+        const supplier = await Supplier.findById(decoded.id).select("-password");
+        if (!supplier) return res.status(404).json({ message: "Supplier not found" });
+
         res.json(supplier);
-      } catch (error) {
+    } catch (error) {
         console.error("Error:", error);
         res.status(401).json({ message: "Unauthorized access" });
-      }
-}
+    }
+};
+
+// Get All Suppliers
 const getAllSuppliers = async (req, res) => {
     try {
-        const suppliers = await Supplier.find({}, 'supplierId name'); // Fetch only 'id' and 'name' fields
+        const suppliers = await Supplier.find({}, 'supplierId name');
         res.json(suppliers);
     } catch (error) {
         console.error("Error fetching suppliers:", error);
         res.status(500).json({ message: "Failed to retrieve suppliers" });
+    }
+};
+
+// Get Particular Supplier by ID
+const getParticularSupplier = async (req, res) => {
+    try {
+        const { supplierId } = req.params;
+
+        const supplier = await Supplier.findOne({ supplierId });
+        if (!supplier) {
+            return res.status(404).json({ message: "Supplier not found" });
+        }
+
+        res.json(supplier);
+    } catch (error) {
+        console.error("Error fetching supplier:", error);
+        res.status(500).json({ message: "Failed to retrieve supplier" });
     }
 };
 
@@ -96,4 +117,5 @@ module.exports = {
     login,
     supplierProfile,
     updateSupplierProfile,
+    getParticularSupplier
 };

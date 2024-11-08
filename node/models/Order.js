@@ -6,7 +6,7 @@ const orderSchema = new mongoose.Schema({
     productId: { type: String }, // Reference to the product
     supplierId: { type: String}, // Reference to the supplier
     orderDate: { type: Date, default: Date.now },
-    description: { type: String,  },
+    description: { type: String,},
     quantity: { type: Number,  },
     proof: { type: String }, // Path to proof (could be a URL or file path)
     amount: { type: Number,  },

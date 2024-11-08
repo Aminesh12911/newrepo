@@ -7,7 +7,8 @@ router.post('/register', supplierController.register);
 router.post('/login', supplierController.login);
 router.get('/supplierProfile', supplierController.supplierProfile);
 router.put('/updateSupplierProfile', supplierController.updateSupplierProfile);
-router.get('/getAllSuppliers', supplierController.getAllSuppliers);
+router.get('/getAllSupplier', supplierController.getAllSuppliers);
+router.get('/getParticularSupplier/:supplierId', supplierController.getParticularSupplier); // Fetch order by orderId
 
 
 module.exports = router;

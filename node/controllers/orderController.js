@@ -3,21 +3,21 @@ const jwt = require('jsonwebtoken');
 
 const createOrder = async (req, res) => {
     try {
-        const { productId, description, quantity, amount } = req.body;
+        const { productId,supplierId, description, quantity, amount } = req.body;
 
         // Generate a unique order ID
         const generatedOrderId = `${Date.now()}-${Math.floor(Math.random() * 100)}`;
 
         // Verify the token
-        const token = req.headers.authorization.split(" ")[1];
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const userId = decoded.id; // Assuming the decoded token has an 'id' field
+        // const token = req.headers.authorization.split(" ")[1];
+        // const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        // const userId = decoded.id; // Assuming the decoded token has an 'id' field
 
         // Create a new order instance
         const order = new Order({
             orderId: generatedOrderId,
             productId,
-            userId, // Store userId to associate the order with the supplier
+            supplierId,
             description,
             quantity,
             amount,
@@ -64,9 +64,27 @@ const updateOrder = async (req, res) => {
         res.status(500).json({ message: "Failed to update order" });
     }
 };
+const getParticularOrder = async (req, res) => {
+    try {
+        const { orderId } = req.params; // Get the orderId from the route params
+       
+        const order = await Order.findOne({ orderId }); // Find order by orderId
+
+        if (!order) {
+            return res.status(404).json({ message: "Order not found" });
+        }
+
+        res.json(order); // Send back the found order
+    } catch (error) {
+        console.error("Error fetching order:", error);
+        res.status(500).json({ message: "Failed to retrieve order" });
+    }
+};
+
 
 module.exports = {
     createOrder,
     getOrder,
-    updateOrder
+    updateOrder,
+    getParticularOrder
 };

@@ -70,6 +70,7 @@ const UserProfile = () => {
         if (response.ok) {
           const orderData = await response.json();
           setOrders(orderData);
+       
         } else {
           setError("Failed to fetch orders.");
         }
@@ -199,13 +200,13 @@ const UserProfile = () => {
         <td>
           {order.orderDate? new Date(order.orderDate).toLocaleDateString() : 'Date not available'}
         </td>
-        <td>{order.description}</td>
+        <td>{order.description || 'description not avai'}</td>
         <td>{order.quantity}</td>
         <td>{order.proof ? <a href={order.proof}>View</a> : 'N/A'}</td>
         <td>${order.amount}</td>
         <td>{order.status}</td>
-        <td>{order.invoice ? <a href={order.invoice}>Invoice</a> : 'N/A'}</td>
-      </tr>
+        <td><a href={`http://localhost:5173/invoice/${order.orderId}`}>Invoice</a></td>
+        </tr>
     ))
   ) : (
     <tr>
