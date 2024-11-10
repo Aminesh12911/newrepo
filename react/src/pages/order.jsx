@@ -16,17 +16,26 @@ const Order = () => {
     useEffect(() => {
         const fetchSuppliers = async () => {
             try {
-                const response = await fetch('http://localhost:8000/supplier/getAllSuppliers', {
+                const response = await fetch('http://localhost:8000/supplier/getAllSupplier', {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`,
                     },
                 });
-                const data = await response.json();
-                if (response.ok) {
-                    setSuppliers(data);
-                    
+                console.log(`Response status: ${response.status}`);
+    
+                // Check if the response is JSON before parsing
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.includes("application/json")) {
+                    const data = await response.json();
+                    if (response.ok) {
+                        setSuppliers(data);
+                    } else {
+                        console.error('Failed to fetch suppliers:', data.error);
+                    }
                 } else {
-                    console.error('Failed to fetch suppliers:', data.error);
+                    console.error("Unexpected content type:", contentType);
+                    const text = await response.text();
+                    console.error("Response body:", text); // Log the full response for debugging
                 }
             } catch (error) {
                 console.error('Error fetching suppliers:', error);
@@ -34,6 +43,7 @@ const Order = () => {
         };
         fetchSuppliers();
     }, []);
+    
 
     useEffect(() => {
         const fetchProducts = async () => {

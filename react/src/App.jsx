@@ -11,6 +11,7 @@ import Order from './pages/order'
 import SupplierProfile from "./pages/supplierProfile";
 import Payment from "./pages/payment";
 import Invoice from "./pages/invoice.jsx"
+import InventoryInward from './pages/inventoryInward.jsx';
 
 function App() {
   return (
@@ -28,6 +29,8 @@ function App() {
         <Route path='/order' element={<Order/>}      />
         <Route path='/payment' element={<Payment/>}      />
         <Route path='/invoice/:orderId' element={<Invoice/>}      />
+        <Route path="/inwardInventory" element={<InventoryInward/>} />
+
           </Routes>
     </Router>
   );

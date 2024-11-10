@@ -9,9 +9,9 @@ const createOrder = async (req, res) => {
         const generatedOrderId = `${Date.now()}-${Math.floor(Math.random() * 100)}`;
 
         // Verify the token
-        // const token = req.headers.authorization.split(" ")[1];
-        // const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        // const userId = decoded.id; // Assuming the decoded token has an 'id' field
+         const token = req.headers.authorization.split(" ")[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+         const userId = decoded.id; // Assuming the decoded token has an 'id' field
 
         // Create a new order instance
         const order = new Order({

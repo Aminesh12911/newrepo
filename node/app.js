@@ -5,6 +5,7 @@ const authRoutes = require('./routes/authRoutes');
 const supplierRoutes = require('./routes/supplierRoutes');
 const productRoutes = require('./routes/productRoutes');
 const orderRoutes = require('./routes/orderRoutes');
+const inwardInventoryRoutes = require('./routes/inwardInventoryRoutes')
 
 require('dotenv').config();
 
@@ -23,7 +24,7 @@ app.use('/', authRoutes);
 app.use('/supplier',supplierRoutes)
 app.use('/product',productRoutes)
 app.use('/order',orderRoutes)
-
+app.use('/inwardInventory',inwardInventoryRoutes)
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {

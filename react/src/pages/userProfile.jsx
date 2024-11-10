@@ -115,6 +115,29 @@ const UserProfile = () => {
     }
   };
 
+  const handleAddToInventory = async (orderId) => {
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await fetch(`http://localhost:8000/inwardInventory/createInwardInventory`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({ orderId }),
+      });
+
+      if (response.ok) {
+        alert("Product added to inventory successfully!");
+      } else {
+        setError("Failed to add product to inventory.");
+      }
+    } catch (error) {
+      setError("Error adding product to inventory.");
+    }
+  };
+
   if (loading) return <div>Loading profile...</div>;
   if (error) return <div>{error}</div>;
 
@@ -126,6 +149,7 @@ const UserProfile = () => {
         </div>
         <ul className="nav-menu">
           <li><a href="http://localhost:5173/order">Order</a></li>
+          <li><a href="http://localhost:5173/inventoryInward">Inventory Inward</a></li>
           <li>Settings</li>
           <li>Feedback Corner</li>
           <li>Reports</li>
@@ -191,26 +215,30 @@ const UserProfile = () => {
                   <th>Amount</th>
                   <th>Status</th>
                   <th>Invoice</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
   {orders.length > 0 ? (
     orders.map(order => (
       <tr key={order.id}>
-        <td>
-          {order.orderDate? new Date(order.orderDate).toLocaleDateString() : 'Date not available'}
-        </td>
-        <td>{order.description || 'description not avai'}</td>
+        <td>{order.orderDate ? new Date(order.orderDate).toLocaleDateString() : 'Date not available'}</td>
+        <td>{order.description || 'Description not available'}</td>
         <td>{order.quantity}</td>
         <td>{order.proof ? <a href={order.proof}>View</a> : 'N/A'}</td>
         <td>${order.amount}</td>
         <td>{order.status}</td>
         <td><a href={`http://localhost:5173/invoice/${order.orderId}`}>Invoice</a></td>
-        </tr>
+        <td>
+          {/* Temporarily remove condition to test button visibility */}
+          <button onClick={() => handleAddToInventory(order.orderId)}>Add to Inventory</button>
+         
+        </td>
+      </tr>
     ))
   ) : (
     <tr>
-      <td colSpan="7">No upcoming orders</td>
+      <td colSpan="8">No upcoming orders</td>
     </tr>
   )}
 </tbody>
