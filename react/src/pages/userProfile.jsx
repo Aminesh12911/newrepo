@@ -149,7 +149,7 @@ const UserProfile = () => {
         </div>
         <ul className="nav-menu">
           <li><a href="http://localhost:5173/order">Order</a></li>
-          <li><a href="http://localhost:5173/inventoryInward">Inventory Inward</a></li>
+          <li><a href="http://localhost:5173/inwardInventory">Inventory Inward</a></li>
           <li>Settings</li>
           <li>Feedback Corner</li>
           <li>Reports</li>

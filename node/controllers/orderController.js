@@ -1,10 +1,11 @@
+const uploadOnCloudinary = require('../config/cloudinaryConfig');
 const Order = require('../models/Order');
 const jwt = require('jsonwebtoken');
 
 const createOrder = async (req, res) => {
     try {
         const { productId,supplierId, description, quantity, amount } = req.body;
-
+      
         // Generate a unique order ID
         const generatedOrderId = `${Date.now()}-${Math.floor(Math.random() * 100)}`;
 
@@ -80,11 +81,46 @@ const getParticularOrder = async (req, res) => {
         res.status(500).json({ message: "Failed to retrieve order" });
     }
 };
+const uploadProof = async (req, res) => {
+    const {orderId } = req.params;
+    const image = req.file;
+    console.log(image);
+    let result ;
+    try {
+        // Check if a file is uploaded
+        if(image) {
+           result = await uploadOnCloudinary(image.path);
+        }
+        else{
+            return res.json({message:"cloudinary not work properly"})
+        }
+
+        // Upload file to Cloudinary
+        
+
+        // Update the order with the proof URL from Cloudinary
+        const updatedOrder = await Order.findOneAndUpdate(
+            { orderId },
+            { proof: result.url }, 
+            { new: true }
+        );
+
+        if (!updatedOrder) {
+            return res.status(404).json({ message: "Order not found" });
+        }
+        res.json(uploadProof);
+        res.json({ message: "Proof uploaded successfully", order: updatedOrder });
+    } catch (error) {
+        console.error("Error uploading proof:", error);
+        res.status(500).json({ message: "Failed to upload proof" });
+    }
+};
 
 
 module.exports = {
     createOrder,
     getOrder,
     updateOrder,
-    getParticularOrder
+    getParticularOrder,
+    uploadProof
 };

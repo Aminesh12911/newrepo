@@ -5,7 +5,7 @@ const Order = () => {
     const [supplierId, setSupplierId] = useState('');
     const [productId, setProductId] = useState('');
     const [description, setDescription] = useState('');
-    const [quantity, setQuantity] = useState('');
+    const [quantity, setQuantity] = useState(0);
     const [amount, setAmount] = useState(0);
     const [proof, setProof] = useState(null);
     const [message, setMessage] = useState('');
@@ -13,6 +13,7 @@ const Order = () => {
     const [products, setProducts] = useState([]);
     const [productPrice, setProductPrice] = useState(0);
 
+    // Fetch Suppliers on component mount
     useEffect(() => {
         const fetchSuppliers = async () => {
             try {
@@ -21,21 +22,11 @@ const Order = () => {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`,
                     },
                 });
-                console.log(`Response status: ${response.status}`);
-    
-                // Check if the response is JSON before parsing
-                const contentType = response.headers.get("content-type");
-                if (contentType && contentType.includes("application/json")) {
-                    const data = await response.json();
-                    if (response.ok) {
-                        setSuppliers(data);
-                    } else {
-                        console.error('Failed to fetch suppliers:', data.error);
-                    }
+                const data = await response.json();
+                if (response.ok) {
+                    setSuppliers(data);
                 } else {
-                    console.error("Unexpected content type:", contentType);
-                    const text = await response.text();
-                    console.error("Response body:", text); // Log the full response for debugging
+                    console.error('Failed to fetch suppliers:', data.error);
                 }
             } catch (error) {
                 console.error('Error fetching suppliers:', error);
@@ -43,8 +34,8 @@ const Order = () => {
         };
         fetchSuppliers();
     }, []);
-    
 
+    // Fetch Products on component mount
     useEffect(() => {
         const fetchProducts = async () => {
             try {
@@ -55,6 +46,7 @@ const Order = () => {
                 });
                 const data = await response.json();
                 if (response.ok) {
+                    console.log("Fetched products:", data); // Log fetched products
                     setProducts(data);
                 } else {
                     console.error('Failed to fetch products:', data.error);
@@ -65,50 +57,59 @@ const Order = () => {
         };
         fetchProducts();
     }, []);
- 
     
+
+    // Handle Product selection and set product price
     const handleProductChange = (e) => {
         const selectedProductId = e.target.value;
+        
         setProductId(selectedProductId);
-        console.log(selectedProductId)
-        const selectedProduct = products.find(product => product.id === selectedProductId);
-        console.log(selectedProductId)
-
+  
+        const selectedProduct = products.find(product => product.productId === selectedProductId); 
+        // Adjust field name if needed
         if (selectedProduct) {
             setProductPrice(selectedProduct.price);
-            setAmount((selectedProduct.price * quantity).toFixed(2));
+            calculateAmount(selectedProduct.price, quantity);
         } else {
             setProductPrice(0);
-            setAmount(1);
+            setAmount(0);
         }
     };
+    
 
+    // Handle Quantity change and calculate amount
     const handleQuantityChange = (e) => {
-        const newQuantity = e.target.value;
+        const newQuantity = parseInt(e.target.value, 10) || 0;
         setQuantity(newQuantity);
-        setAmount((productPrice * newQuantity).toFixed(2));
+        calculateAmount(productPrice, newQuantity);
     };
 
+    // Function to calculate the total amount
+    const calculateAmount = (price, qty) => {
+        setAmount((price * qty).toFixed(2));
+    };
+
+    // Handle Form submission
     const handleSubmit = async (event) => {
+      
         event.preventDefault();
-        console.log("Product ID:", productId); // Log the product ID
-        const formData = new FormData();
-        formData.append('supplierId', supplierId);
-        formData.append('productId', productId);
-        formData.append('description', description);
-        formData.append('quantity', quantity);
-        formData.append('amount', amount.toString());
-        if (proof) {
-            formData.append('proof', proof);
-        }
+console.log(supplierId)
+        const payload = {
+            supplierId,
+            productId,
+            description,
+            quantity,
+            amount,
+        };
 
         try {
             const response = await fetch('http://localhost:8000/order/createOrder', {
                 method: 'POST',
-                body: formData,
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    'Content-Type': 'application/json',
                 },
+                body: JSON.stringify(payload),
             });
 
             const result = await response.json();
@@ -117,7 +118,7 @@ const Order = () => {
                 setSupplierId('');
                 setProductId('');
                 setDescription('');
-                setQuantity('');
+                setQuantity(0);
                 setAmount(0);
                 setProof(null);
                 setProductPrice(0);
@@ -138,18 +139,19 @@ const Order = () => {
                     <div className="input-group">
                         <label htmlFor="supplierId">Supplier:</label>
                         <select 
-                            id="supplierId" 
-                            value={supplierId} 
-                            onChange={(e) => setSupplierId(e.target.value)} 
-                            required
-                        >
-                            <option value="">Select a supplier</option>
-                            {suppliers.map((supplier) => (
-                                <option key={supplier.id || supplier.supplierId} value={supplier.id}>
-                                    {supplier.name} || {supplier.supplierId}
-                                </option>
-                            ))}
-                        </select>
+    id="supplierId" 
+    value={supplierId} 
+    onChange={(e) => setSupplierId(e.target.value)} 
+    required
+>
+    <option value="">Select a supplier</option>
+    {suppliers.map((supplier) => (
+        <option key={supplier.supplierId} value={supplier.supplierId}>
+            {supplier.name} || {supplier.supplierId}
+        </option>
+    ))}
+</select>
+
                     </div>
                     <div className="input-group">
                         <label htmlFor="productId">Product :</label>
@@ -161,7 +163,7 @@ const Order = () => {
                         >
                             <option value="">Select a Product</option>
                             {products.map((product) => (
-                                <option key={product.id || product.productId} value={product.id}>
+                                <option key={product.id || product.productId} value={product.productId}>
                                     {product.name} || Price: {product.price}
                                 </option>
                             ))}

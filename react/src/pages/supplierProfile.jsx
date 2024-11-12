@@ -135,6 +135,37 @@ const SupplierProfile = () => {
     }
   };
 
+  const handleFileUpload = async (orderId, file) => {
+    const token = localStorage.getItem("token");
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await fetch(`http://localhost:8000/order/uploadProof/${orderId}`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`
+        },
+        body: formData,
+      });
+
+      if (response.ok) {
+        const updatedOrder = await response.json();
+        setOrders((prevOrders) =>
+          prevOrders.map((order) =>
+            order.orderId === orderId ? { ...order, proof: updatedOrder.proof } : order
+          )
+        );
+        alert("Proof uploaded successfully!");
+      } else {
+        alert("Failed to upload proof.");
+      }
+    } catch (error) {
+      console.error("Error uploading proof:", error);
+    }
+  };
+
   if (!supplier) {
     return <div>Loading...</div>;
   }
@@ -218,7 +249,14 @@ const SupplierProfile = () => {
                       <td>{new Date(order.orderDate).toLocaleDateString()}</td>
                       <td>{order.description}</td>
                       <td>{order.quantity}</td>
-                      <td>{order.proof ? <a href={order.proof}>View</a> : 'N/A'}</td>
+                      <td>
+                        {order.proof ? <a href={order.proof}>View</a> : 'N/A'}
+                        <input 
+                          type="file" 
+                          onChange={(e) => handleFileUpload(order.orderId, e.target.files[0])}
+                          style={{ display: 'block', marginTop: '5px' }}
+                        />
+                      </td>
                       <td>${order.amount}</td>
                       <td>{order.status}</td>
                       <td>{order.invoice ? <a href={order.invoice}>Invoice</a> : 'N/A'}</td>
